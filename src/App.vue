@@ -1,11 +1,18 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import NewEntry from './components/NewEntry.vue';
+import Calendar from './components/Calendar.vue';
+import Today from './components/Today.vue';
+import Sidebar from './components/Sidebar.vue';
+import NewList from './components/NewList.vue';
+
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <Calendar />
+  <NewEntry />
+  <Today />
+  <Sidebar />
+  <NewList />
 </template>
 
 <style scoped></style>
