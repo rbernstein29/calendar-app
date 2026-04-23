@@ -1,21 +1,100 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+    import { ref, computed } from 'vue'
+    import { useRouter } from 'vue-router'
+    
+    const router = useRouter()
+
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+    const today_date = new Date(Date.now())
+    const today_day = today_date.getDate()
+    const today_month_num = today_date.getMonth()
+    const today_year = today_date.getFullYear()
+
+    let current_date = ref({ month: today_month_num, day: today_day, year: today_year })
+
+    let prev_month = computed( () => current_date.value.month === 0 ? months[11] : months[current_date.value.month - 1] )
+    let next_month = computed( () => current_date.value.month === 11 ? months[0] : months[current_date.value.month + 1] )
+
+    const weeks = computed(() => {
+        const num_days = new Date(current_date.value.year, current_date.value.month + 1, 0).getDate()
+        const first_day = new Date(current_date.value.year, current_date.value.month, 1).getDay()
+
+        const result = []
+        let week = Array(first_day).fill(null)
+
+        for (let day = 1; day <= num_days; day++) {
+            week.push(day)
+            if (week.length === 7) {
+                result.push(week)
+                week = []
+            }
+        }
+
+        if (week.length > 0) {
+            while (week.length < 7) { week.push(null) }
+            result.push(week)
+        }
+
+        return result
+    })
+
+    const change_prev_month = () => {
+        if (current_date.value.month > 0) {
+            current_date.value.month = current_date.value.month - 1
+        }
+        else if (current_date.value.month === 0) {
+            current_date.value.month = 11
+            current_date.value.year--
+        }
+    }
+
+    const change_next_month = () => {
+        if (current_date.value.month < 11) {
+            current_date.value.month = current_date.value.month + 1
+        }
+        else if (current_date.value.month === 11) {
+            current_date.value.month = 0
+            current_date.value.year++
+        }
+    }
+
+    const goto_today = () => {
+        current_date.value.month = today_month_num
+        current_date.value.day = today_day
+        current_date.value.year = today_year
+    }
+
+</script>
 
 <template>
-    <button class="calendar-button">Today</button>
+    <button class="calendar-button" @click="goto_today">Today</button>
     <calendar-header>
-        <month-year>April 2026</month-year>
-        <button class="calendar-button"><-MAR</button>
-        <button class="calendar-button">MAY-></button>
+        <month-year>{{ months[current_date.month] + " " + current_date.year }}</month-year>
+        <button class="calendar-button" id="prev-month" @click="change_prev_month"><-{{ prev_month }}</button>
+        <button class="calendar-button" id="next-month" @click="change_next_month">{{ next_month }}-></button>
     </calendar-header>
 
-    <week-days><p>Su</p><p>M</p><p>Tu</p><p>W</p><p>Th</p><p>F</p><p>Sa</p></week-days>
-    <week-days><p></p><p></p><p></p><p>1</p><p>2</p><p>3</p><p>4</p></week-days>
-    <week-days><p>5</p><p>6</p><p>7</p><p>8</p><p>9</p><p>10</p><p>11</p></week-days>
-    <week-days><p>12</p><p>13</p><p>14</p><p>15</p><p>16</p><p>17</p><p>18</p></week-days>
-    <week-days><p>19</p><p>20</p><p>21</p><p>22</p><p>23</p><p>24</p><p>25</p></week-days>
-    <week-days><p>26</p><p>27</p><p>28</p><p>29</p><p>30</p><p></p><p></p></week-days>
+    <table>
+        <thead>
+            <tr>
+                <th>Su</th>
+                <th>M</th>
+                <th>Tu</th>
+                <th>W</th>
+                <th>Th</th>
+                <th>F</th>
+                <th>Sa</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(week, wi) in weeks" :key="wi">
+                <td v-for="(day, di) in week" :key="di">{{ day ?? '' }}</td>
+            </tr>
+        </tbody>
+    </table>
 
-    <button class="calendar-button">+ New</button>
+    <button class="calendar-button" @click="$router.push('/newentry')">+ New</button>
 </template>
 
 <style scoped>
@@ -32,7 +111,7 @@
         margin: 10px;
     }
 
-    week-days {
+    .week-days {
         display: grid;
         grid-auto-flow: column;
     }

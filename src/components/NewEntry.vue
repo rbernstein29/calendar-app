@@ -1,4 +1,18 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+    import { useRouter } from 'vue-router'
+    
+    const router = useRouter()
+
+    const create_entry = (date: string, time_start: string, time_end: string, list: string) => {
+      const entry = {
+        date: date,
+        time_start: time_start,
+        time_end: time_end,
+        list: list
+      }
+      
+    }
+</script>
 
 <template>
   <component-body>
@@ -48,27 +62,9 @@
       </selection-entry>
     </selection-field>
 
-    <selection-field>
-      <selection-title>Repeat</selection-title>
-      <selection-entry>
-        <select name="repeat">
-          <option></option>
-          <option>Every Day</option>
-          <option>Every Sunday</option>
-          <option>Every Monday</option>
-          <option>Every Tuesday</option>
-          <option>Every Wednesday</option>
-          <option>Every Thursday</option>
-          <option>Every Friday</option>
-          <option>Every Saturday</option>
-          <option>Never</option>
-        </select>
-      </selection-entry>
-    </selection-field>
-
     <selection-buttons>
-      <button class="create-button">Create</button>
-      <button class="discard-button">Discard</button>
+      <button class="create-button" @click="$router.push('/')">Create</button>
+      <button class="discard-button" @click="$router.push('/')">Discard</button>
     </selection-buttons>
   </component-body>
 </template>
