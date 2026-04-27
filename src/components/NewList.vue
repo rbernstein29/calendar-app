@@ -1,4 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import { ref } from 'vue'
+  import { createList } from '@/ts/lists'
+
+  const list_name = ref('')
+  const list_color = ref('')
+</script>
 
 <template>
     <component-body>
@@ -6,22 +12,45 @@
 
         <selection-field>
             <selection-title>Name</selection-title>
-            <selection-entry><input type="text" /></selection-entry>
+            <selection-entry><input type="text" v-model="list_name" /></selection-entry>
         </selection-field>
 
         <selection-field>
             <selection-title>Color</selection-title>
-            <selection-entry>
-                <list-color class="red"></list-color>
-                <list-color class="blue"></list-color>
-                <list-color class="green"></list-color>
-                <list-color class="yellow"></list-color>
+            <selection-entry v-model="list_color">
+                <template v-if="list_color === 'red'">
+                  <list-color class="red-filled" @click="list_color = 'red'"></list-color>
+                </template>
+                <template v-else>
+                  <list-color class="red" @click="list_color = 'red'"></list-color>
+                </template>
+
+                <template v-if="list_color === 'blue'">
+                  <list-color class="blue-filled" @click="list_color = 'blue'"></list-color>
+                </template>
+                <template v-else>
+                  <list-color class="blue" @click="list_color = 'blue'"></list-color>
+                </template>
+
+                <template v-if="list_color === 'green'">
+                  <list-color class="green-filled" @click="list_color = 'green'"></list-color>
+                </template>
+                <template v-else>
+                  <list-color class="green" @click="list_color = 'green'"></list-color>
+                </template>
+
+                <template v-if="list_color === 'yellow'">
+                  <list-color class="yellow-filled" @click="list_color = 'yellow'"></list-color>
+                </template>
+                <template v-else>
+                  <list-color class="yellow" @click="list_color = 'yellow'"></list-color>
+                </template>
             </selection-entry>
         </selection-field>
 
         <selection-buttons>
-            <button class="create-button">Create</button>
-            <button class="discard-button">Discard</button>
+            <button class="create-button" @click="createList({ name: list_name, color: list_color, count: 0 }); $router.push('/')">Create</button>
+            <button class="discard-button" @click="$router.push('/')">Discard</button>
         </selection-buttons>
     </component-body>
 </template>
@@ -88,7 +117,6 @@
     }
 
     .red {
-        background-color: red;
         border-color: red;
     }
 
@@ -102,6 +130,26 @@
 
     .yellow {
         border-color: yellow;
+    }
+    
+    .red-filled {
+        border-color: red;
+        background-color: red;
+    }
+
+    .blue-filled {
+        border-color: blue;
+        background-color: blue;
+    }
+
+    .green-filled {
+        border-color: green;
+        background-color: green;
+    }
+
+    .yellow-filled {
+        border-color: yellow;
+        background-color: yellow;
     }
 
 </style>

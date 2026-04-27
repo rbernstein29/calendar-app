@@ -1,33 +1,51 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+    import { lists } from '@/ts/lists';
+</script>
 
 <template>
-    <button class="calendar-button">≡</button>
+    <button class="calendar-button" @click="$router.push('/')">≡</button>
 
     <component-body>
-        <list-title>Today</list-title><list-count>3</list-count>
-        <list-title>School</list-title><list-count>5</list-count>
-        <list-title>Work</list-title><list-count>0</list-count>
+        <list-item v-for="list in lists" :key="list.id">
+            <list-color :class="list.color + '-filled'"></list-color>
+            <list-title>{{ list.name }}</list-title>
+            <list-count>{{ list.count }}</list-count>
+        </list-item>
     </component-body>
 
-    <button class="calendar-button">+ New List</button>
+    <button class="calendar-button" @click="$router.push('/newlist')">+ New List</button>
 </template>
 
 <style scoped>
-    component-body {
+    list-item {
         display: grid;
-        grid-template: "title count";
+        grid-template: "color title count" / 10px 1fr 1fr;
         grid-auto-flow: row;
     }
 
     list-title {
         margin: 5px;
         font-size: 20px;
+        align-self: center;
     }
 
     list-count {
         margin: 5px;
         font-size: 15px;
         justify-self: right;
+        align-self: center;
+    }
+
+    list-color {
+        height: 20px;
+        width: 1px;
+        border-style: solid;
+        margin: 5px;
+        grid-area: color;
+        justify-self: left;
+        align-self: center;
+        margin-left: 5px;
+        margin-right: 5px;
     }
 
     .calendar-button {
@@ -36,5 +54,25 @@
         background-color: blue;
         color: white;
         font-size: 15px;
+    }
+
+    .red-filled {
+        border-color: red;
+        background-color: red;
+    }
+
+    .blue-filled {
+        border-color: blue;
+        background-color: blue;
+    }
+
+    .green-filled {
+        border-color: green;
+        background-color: green;
+    }
+
+    .yellow-filled {
+        border-color: yellow;
+        background-color: yellow;
     }
 </style>

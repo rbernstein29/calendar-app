@@ -1,15 +1,6 @@
 <script setup lang="ts">
     import { ref, computed } from 'vue'
-    import { useRouter } from 'vue-router'
-    
-    const router = useRouter()
-
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-
-    const today_date = new Date(Date.now())
-    const today_day = today_date.getDate()
-    const today_month_num = today_date.getMonth()
-    const today_year = today_date.getFullYear()
+    import { months, today_date, today_day, today_month_num, today_year } from '@/ts/constants'
 
     let current_date = ref({ month: today_month_num, day: today_day, year: today_year })
 
@@ -68,11 +59,15 @@
 </script>
 
 <template>
-    <button class="calendar-button" @click="goto_today">Today</button>
+    <page-heading>
+        <button class="calendar-button-sidebar" @click="$router.push('/sidebar')">≡</button>
+        <button class="calendar-button-today" @click="$router.push(`/dailyevents/${today_year}/${today_month_num}/${today_day}`)">Today</button>
+    </page-heading>
+
     <calendar-header>
         <month-year>{{ months[current_date.month] + " " + current_date.year }}</month-year>
-        <button class="calendar-button" id="prev-month" @click="change_prev_month"><-{{ prev_month }}</button>
-        <button class="calendar-button" id="next-month" @click="change_next_month">{{ next_month }}-></button>
+        <button class="calendar-button" id="prev-month" @click="change_prev_month">{{ prev_month }}</button>
+        <button class="calendar-button" id="next-month" @click="change_next_month">{{ next_month }}</button>
     </calendar-header>
 
     <table>
@@ -89,7 +84,7 @@
         </thead>
         <tbody>
             <tr v-for="(week, wi) in weeks" :key="wi">
-                <td v-for="(day, di) in week" :key="di">{{ day ?? '' }}</td>
+                <td v-for="(day, di) in week" :key="di" @click="day && $router.push(`/dailyevents/${current_date.year}/${current_date.month}/${day}`)">{{ day ?? '' }}</td>
             </tr>
         </tbody>
     </table>
@@ -98,6 +93,12 @@
 </template>
 
 <style scoped>
+    page-heading {
+        display: grid;
+        grid-template: 
+            "sidebar today"
+        ;
+    }
     calendar-header {
         display: grid;
         grid-template: "prev-month month-year next-month";
@@ -122,5 +123,23 @@
         background-color: blue;
         color: white;
         font-size: 15px;
+    }
+
+    .calendar-button-sidebar {
+        margin: 5px;
+        padding: 5px;
+        background-color: blue;
+        color: white;
+        font-size: 15px;
+        justify-self: left;
+    }
+
+    .calendar-button-today {
+        margin: 5px;
+        padding: 5px;
+        background-color: blue;
+        color: white;
+        font-size: 15px;
+        justify-self: right;
     }
 </style>

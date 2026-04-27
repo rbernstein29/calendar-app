@@ -1,16 +1,28 @@
 <script setup lang="ts">
-    import { useRouter } from 'vue-router'
-    
-    const router = useRouter()
+    import { ref } from 'vue'
+    import { addEntry } from '@/ts/entries'
+    import { lists } from '@/ts/lists'
 
-    const create_entry = (date: string, time_start: string, time_end: string, list: string) => {
+    const entry_type = ref("")
+    const entry_name = ref("")
+    const entry_date = ref("")
+    const entry_time_start = ref("")
+    const entry_time_end = ref("")
+    const entry_list = ref<{ id: number, name: string } | null>(null)
+
+    const create_entry = (entry_type: string, entry_name: string, date: string, time_start: string, time_end: string, list: { id: number, name: string } | null) => {
       const entry = {
+        type: entry_type,
+        name: entry_name,
         date: date,
         time_start: time_start,
         time_end: time_end,
-        list: list
+        list_id: list?.id,
+        list_name: list?.name,
+        completed: false
       }
-      
+      lists.value.find(l => l.id === entry.list_id).count++
+      addEntry(entry)
     }
 </script>
 
@@ -21,8 +33,7 @@
     <selection-field>
       <selection-title>Entry Type</selection-title>
       <selection-entry>
-        <select name="entry">
-          <option></option>
+        <select name="entry" id="entry-type-select" v-model="entry_type">
           <option>Event</option>
           <option>Todo</option>
         </select>
@@ -30,8 +41,17 @@
     </selection-field>
 
     <selection-field>
+      <selection-title>Entry Title</selection-title>
+      <selection-entry>
+        <input type="text" id="entry-title" v-model="entry_name" />
+      </selection-entry>
+    </selection-field>
+
+    <selection-field>
       <selection-title>Date</selection-title>
-      <selection-entry><input type="date" /></selection-entry>
+      <selection-entry>
+        <input type="date" id="date-select" v-model="entry_date" />
+      </selection-entry>
     </selection-field>
 
     <selection-field>
@@ -40,12 +60,12 @@
 
         <selection-subsection>
           <selection-subtitle>Start: </selection-subtitle>
-          <input type="time" class="time-select"/>
+          <input type="time" class="time-select" id="time-select-start" v-model="entry_time_start" />
         </selection-subsection>
 
         <selection-subsection>
           <selection-subtitle>End: </selection-subtitle>
-          <input type="time" class="time-select"/>
+          <input type="time" class="time-select" id="time-select-end" v-model="entry_time_end" />
         </selection-subsection>
 
       </selection-entry>
@@ -54,16 +74,14 @@
     <selection-field>
       <selection-title>List</selection-title>
       <selection-entry>
-        <select name="list">
-          <option></option>
-          <option>School</option>
-          <option>Work</option>
+        <select name="list" id="list-select" v-model="entry_list" >
+          <option v-for="list in lists" :value="{ id: list.id, name: list.name}">{{ list.name }}</option>
         </select>
       </selection-entry>
     </selection-field>
 
     <selection-buttons>
-      <button class="create-button" @click="$router.push('/')">Create</button>
+      <button class="create-button" @click="create_entry(entry_type, entry_name, entry_date, entry_time_start, entry_time_end, entry_list); $router.push('/')">Create</button>
       <button class="discard-button" @click="$router.push('/')">Discard</button>
     </selection-buttons>
   </component-body>
