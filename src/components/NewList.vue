@@ -56,100 +56,129 @@
 </template>
 
 <style scoped>
-    section-heading {
-      justify-self: center;
-      font-size: 30px;
-      font-weight: bold;
-      margin: 10px;
+    * {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        box-sizing: border-box;
     }
-    
-    component-body {
-      display: grid;
-      grid-auto-flow: row;
 
+    body {
+        background: #f5f7fa;
+        margin: 0;
+    }
+
+    component-body {
+        display: grid;
+        grid-auto-flow: row;
+        max-width: 430px;
+        margin: 0 auto;
+        background: #f5f7fa;
+    }
+
+    section-heading {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        padding: 20px 24px 12px;
     }
 
     selection-field {
-      margin: 5px;
-      display: grid;
-      grid-template: 
-        "selection-title selection-entry"
-      ;
+        display: grid;
+        grid-template: "selection-title selection-entry" / 1fr 1fr;
+        align-items: center;
+        padding: 14px 20px;
+        background: #fff;
+        border-top: 1px solid #f0f2f5;
+        border-bottom: 1px solid #f0f2f5;
     }
 
     selection-title {
-      margin-right: 10px;
-      grid-area: selection-title;
-      font-size: 20px;
+        grid-area: selection-title;
+        font-size: 15px;
+        font-weight: 600;
+        color: #1a1a2e;
     }
 
     selection-entry {
-      grid-area: selection-entry;
-      justify-self: right;
-      display: grid;
-      grid-auto-flow: column;
+        grid-area: selection-entry;
+        justify-self: end;
+        display: grid;
+        grid-auto-flow: column;
+        align-items: center;
+        gap: 6px;
+    }
+
+    input[type="text"] {
+        border: 1px solid #e0e3ea;
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 14px;
+        color: #1a1a2e;
+        background: #f5f7fa;
+        outline: none;
+    }
+
+    input[type="text"]:focus {
+        border-color: #007aff;
+        background: #fff;
     }
 
     selection-buttons {
-      justify-self: center;
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        padding: 24px 20px;
     }
 
     .create-button {
-      margin: 5px;
-      padding: 10px;
-      background-color: lightgreen;
-      font-size: 20px;
+        background: #007aff;
+        color: #fff;
+        border: none;
+        border-radius: 16px;
+        padding: 7px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .create-button:active {
+        background: #0062cc;
     }
 
     .discard-button {
-      margin: 5px;
-      padding: 10px;
-      background-color: red;
-      font-size: 20px;
+        background: #f0f2f5;
+        color: #666;
+        border: none;
+        border-radius: 16px;
+        padding: 7px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .discard-button:active {
+        background: #e0e3ea;
     }
 
     list-color {
-        height: 20px;
-        width: 20px;
-        border-radius: 20px;
+        height: 22px;
+        width: 22px;
+        border-radius: 50%;
+        border-width: 2px;
         border-style: solid;
-        margin: 5px;
+        cursor: pointer;
     }
 
-    .red {
-        border-color: red;
-    }
+    .red { border-color: red; }
+    .blue { border-color: blue; }
+    .green { border-color: green; }
+    .yellow { border-color: #e6c200; }
 
-    .blue {
-        border-color: blue;
-    }
-
-    .green {
-        border-color: green;
-    }
-
-    .yellow {
-        border-color: yellow;
-    }
-    
-    .red-filled {
-        border-color: red;
-        background-color: red;
-    }
-
-    .blue-filled {
-        border-color: blue;
-        background-color: blue;
-    }
-
-    .green-filled {
-        border-color: green;
-        background-color: green;
-    }
-
-    .yellow-filled {
-        border-color: yellow;
-        background-color: yellow;
-    }
-
+    .red-filled { border-color: red; background-color: red; }
+    .blue-filled { border-color: blue; background-color: blue; }
+    .green-filled { border-color: green; background-color: green; }
+    .yellow-filled { border-color: #e6c200; background-color: #e6c200; }
 </style>

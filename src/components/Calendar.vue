@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { ref, computed } from 'vue'
-    import { months, today_date, today_day, today_month_num, today_year } from '@/ts/constants'
+    import { months, today_day, today_month_num, today_year } from '@/ts/constants'
+    import { showSidebar } from '@/ts/sidebar'
 
     let current_date = ref({ month: today_month_num, day: today_day, year: today_year })
 
@@ -60,8 +61,9 @@
 
 <template>
     <page-heading>
-        <button class="calendar-button-sidebar" @click="$router.push('/sidebar')">≡</button>
+        <button class="calendar-button-sidebar" @click="showSidebar = true">≡</button>
         <button class="calendar-button-today" @click="$router.push(`/dailyevents/${today_year}/${today_month_num}/${today_day}`)">Today</button>
+        <button class="calendar-button-home" @click="goto_today()">⌂</button>
     </page-heading>
 
     <calendar-header>
@@ -73,73 +75,187 @@
     <table>
         <thead>
             <tr>
-                <th>Su</th>
+                <th>S</th>
                 <th>M</th>
-                <th>Tu</th>
+                <th>T</th>
                 <th>W</th>
-                <th>Th</th>
+                <th>T</th>
                 <th>F</th>
-                <th>Sa</th>
+                <th>S</th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="(week, wi) in weeks" :key="wi">
-                <td v-for="(day, di) in week" :key="di" @click="day && $router.push(`/dailyevents/${current_date.year}/${current_date.month}/${day}`)">{{ day ?? '' }}</td>
+                <td v-for="(day, di) in week" :key="di" :class="{ today: day === today_day && current_date.month === today_month_num && current_date.year === today_year }" @click="day && $router.push(`/dailyevents/${current_date.year}/${current_date.month}/${day}`)">{{ day ?? '' }}</td>
             </tr>
         </tbody>
     </table>
 
-    <button class="calendar-button" @click="$router.push('/newentry')">+ New</button>
+    <button class="calendar-button" @click="$router.push('/newentry')">+</button>
 </template>
 
 <style scoped>
-    page-heading {
-        display: grid;
-        grid-template: 
-            "sidebar today"
-        ;
+    * {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        box-sizing: border-box;
     }
+
+    body {
+        background: #f5f7fa;
+        margin: 0;
+    }
+
+    page-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #fff;
+        padding: 14px 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        max-width: 430px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
     calendar-header {
-        display: grid;
-        grid-template: "prev-month month-year next-month";
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px 12px;
+        max-width: 430px;
+        margin: 0 auto;
+        width: 100%;
     }
 
     month-year {
-        grid-area: month-year;
-        justify-self: center;
-        font-size: 30px;
-        font-weight: bold;
-        margin: 10px;
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        order: 2;
     }
 
-    .week-days {
+    table {
         display: grid;
-        grid-auto-flow: column;
+        grid-template-columns: repeat(7, 1fr);
+        width: 100%;
+        max-width: 430px;
+        margin: 0 auto;
+        padding: 0 12px;
+        gap: 2px;
     }
 
-    .calendar-button {
-        margin: 5px;
-        padding: 5px;
-        background-color: blue;
-        color: white;
-        font-size: 15px;
+    thead, tbody, tr {
+        display: contents;
+    }
+
+    th {
+        font-size: 11px;
+        font-weight: 600;
+        color: #9aa0b0;
+        text-align: center;
+        padding: 8px 0;
+    }
+
+    td {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: #1a1a2e;
+        cursor: pointer;
+        border-radius: 50%;
+        transition: background 0.15s;
+    }
+
+    td:empty {
+        cursor: default;
+    }
+
+    td:not(:empty):hover {
+        background: #e8eaf0;
+    }
+
+    td.today {
+        background: #007aff;
+        color: #fff;
+        font-weight: 700;
+        width: 32px;
+        height: 32px;
+        margin: auto;
+    }
+
+    td.today:hover {
+        background: #0062cc;
     }
 
     .calendar-button-sidebar {
-        margin: 5px;
-        padding: 5px;
-        background-color: blue;
-        color: white;
-        font-size: 15px;
-        justify-self: left;
+        background: none;
+        border: none;
+        font-size: 22px;
+        color: #333;
+        padding: 6px;
+        cursor: pointer;
     }
 
     .calendar-button-today {
-        margin: 5px;
-        padding: 5px;
-        background-color: blue;
-        color: white;
-        font-size: 15px;
-        justify-self: right;
+        background: #007aff;
+        color: #fff;
+        border: none;
+        border-radius: 16px;
+        padding: 6px 14px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-left: auto;
+    }
+
+    .calendar-button-home {
+        background: #007aff;
+        color: #fff;
+        border: none;
+        border-radius: 16px;
+        padding: 6px 10px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    #prev-month, #next-month {
+        background: #007aff;
+        border: none;
+        border-radius: 18px;
+        padding: 6px 12px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s;
+    }
+
+    #prev-month { order: 1; }
+    #next-month { order: 3; }
+
+    #prev-month:active, #next-month:active {
+        background: #0062cc;
+    }
+
+    .calendar-button:not(#prev-month):not(#next-month) {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #007aff;
+        color: #fff;
+        border: none;
+        font-size: 24px;
+        box-shadow: 0 4px 16px rgba(0, 122, 255, 0.4);
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
     }
 </style>

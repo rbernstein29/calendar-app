@@ -88,68 +88,119 @@
 </template>
 
 <style scoped>
-    section-heading {
-      justify-self: center;
-      font-size: 30px;
-      font-weight: bold;
-      margin: 10px;
+    * {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        box-sizing: border-box;
     }
-    
-    component-body {
-      display: grid;
-      grid-auto-flow: row;
 
+    body {
+        background: #f5f7fa;
+        margin: 0;
+    }
+
+    component-body {
+        display: grid;
+        grid-auto-flow: row;
+        max-width: 430px;
+        margin: 0 auto;
+        min-height: 100vh;
+        background: #f5f7fa;
+    }
+
+    section-heading {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        padding: 20px 24px 12px;
     }
 
     selection-field {
-      margin: 5px;
-      display: grid;
-      grid-template: 
-        "selection-title selection-entry"
-      ;
+        display: grid;
+        grid-template: "selection-title selection-entry" / 1fr 1fr;
+        align-items: center;
+        padding: 14px 20px;
+        background: #fff;
+        border-bottom: 1px solid #f0f2f5;
     }
 
     selection-title {
-      margin-right: 10px;
-      grid-area: selection-title;
-      font-size: 20px;
-    }
-
-    selection-subsection {
-      margin: 5px;
-      justify-content: right;
-    }
-
-    selection-subtitle {
-      margin-right: 10px;
-      font-size: 15px;
-    }
-
-    .time-select {
-      justify-items: right;
+        grid-area: selection-title;
+        font-size: 15px;
+        font-weight: 600;
+        color: #1a1a2e;
     }
 
     selection-entry {
-      grid-area: selection-entry;
-      justify-self: right;
-      display: grid;
+        grid-area: selection-entry;
+        justify-self: end;
+        display: grid;
+        justify-items: end;
+    }
+
+    selection-subsection {
+        display: grid;
+        grid-template-columns: auto auto;
+        align-items: center;
+        gap: 8px;
+        margin: 4px 0;
+    }
+
+    selection-subtitle {
+        font-size: 13px;
+        color: #9aa0b0;
+    }
+
+    select,
+    input[type="text"],
+    input[type="date"],
+    input[type="time"] {
+        border: 1px solid #e0e3ea;
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 14px;
+        color: #1a1a2e;
+        background: #f5f7fa;
+        outline: none;
     }
 
     selection-buttons {
-      justify-self: center;
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        padding: 24px 20px;
     }
 
     .create-button {
-      margin: 5px;
-      padding: 10px;
-      background-color: lightgreen;
-      font-size: 20px;
+        background: #007aff;
+        color: #fff;
+        border: none;
+        border-radius: 16px;
+        padding: 7px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .create-button:active {
+        background: #0062cc;
     }
 
     .discard-button {
-      margin: 5px;
-      padding: 10px;
-      background-color: red;
-      font-size: 20px;
+        background: #f0f2f5;
+        color: #666;
+        border: none;
+        border-radius: 16px;
+        padding: 7px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .discard-button:active {
+        background: #e0e3ea;
     }
 </style>
