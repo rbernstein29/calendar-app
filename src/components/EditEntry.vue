@@ -1,28 +1,20 @@
 <script setup lang="ts">
     import { ref } from 'vue'
-    import { add_entry } from '@/ts/entries'
+    import { entries, update_entry } from '@/ts/entries'
     import { lists } from '@/ts/lists'
-    import type { List } from '@/ts/lists'
+    import { useRoute } from 'vue-router'
 
-    const entry_type = ref("")
-    const entry_name = ref("")
-    const entry_date = ref("")
-    const entry_time_start = ref("")
-    const entry_time_end = ref("")
-    const entry_list = ref()
+    const route = useRoute()
 
-    const create_entry = (entry_type: string, entry_name: string, date: string, time_start: string, time_end: string, list: List) => {
-      const entry = {
-        type: entry_type,
-        name: entry_name,
-        date: date,
-        time_start: time_start,
-        time_end: time_end,
-        list: list,
-        completed: false
-      }
-      add_entry(entry)
-    }
+    const entry_id = Number(route.params.id)
+    const entry = entries.value.find(e => e.id === entry_id)!
+
+    const entry_type = ref(entry.type)
+    const entry_name = ref(entry.name)
+    const entry_date = ref(entry.date)
+    const entry_time_start = ref(entry.time_start)
+    const entry_time_end = ref(entry.time_end)
+    const entry_list = ref(entry.list)
 </script>
 
 <template>
@@ -80,7 +72,7 @@
     </selection-field>
 
     <selection-buttons>
-      <button class="create-button" @click="create_entry(entry_type, entry_name, entry_date, entry_time_start, entry_time_end, entry_list); $router.push('/')">Create</button>
+      <button class="create-button" @click="update_entry(entry_id, entry_type, entry_name, entry_date, entry_time_start, entry_time_end, entry_list); $router.push('/')">Update</button>
       <button class="discard-button" @click="$router.push('/')">Discard</button>
     </selection-buttons>
   </component-body>

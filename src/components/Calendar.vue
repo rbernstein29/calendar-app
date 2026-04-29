@@ -62,7 +62,7 @@
 <template>
     <page-heading>
         <button class="calendar-button-sidebar" @click="showSidebar = true">≡</button>
-        <button class="calendar-button-today" @click="$router.push(`/dailyevents/${today_year}/${today_month_num}/${today_day}`)">Today</button>
+        <button class="calendar-button-today" @click="$router.push(`/dailyentries/${today_year}/${today_month_num}/${today_day}`)">Today</button>
         <button class="calendar-button-home" @click="goto_today()">⌂</button>
     </page-heading>
 
@@ -86,7 +86,7 @@
         </thead>
         <tbody>
             <tr v-for="(week, wi) in weeks" :key="wi">
-                <td v-for="(day, di) in week" :key="di" :class="{ today: day === today_day && current_date.month === today_month_num && current_date.year === today_year }" @click="day && $router.push(`/dailyevents/${current_date.year}/${current_date.month}/${day}`)">{{ day ?? '' }}</td>
+                <td v-for="(day, di) in week" :key="di" :class="{ today: day === today_day && current_date.month === today_month_num && current_date.year === today_year }" @click="day && $router.push(`/dailyentries/${current_date.year}/${current_date.month}/${day}`)">{{ day ?? '' }}</td>
             </tr>
         </tbody>
     </table>
@@ -98,11 +98,6 @@
     * {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         box-sizing: border-box;
-    }
-
-    body {
-        background: #f5f7fa;
-        margin: 0;
     }
 
     page-heading {
@@ -255,7 +250,5 @@
         font-size: 24px;
         box-shadow: 0 4px 16px rgba(0, 122, 255, 0.4);
         cursor: pointer;
-        align-items: center;
-        justify-content: center;
     }
 </style>

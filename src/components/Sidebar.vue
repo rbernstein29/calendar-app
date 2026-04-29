@@ -1,8 +1,9 @@
 <script setup lang="ts">
-    import { ref } from 'vue'
-    import { lists } from '@/ts/lists';
-    import { entries } from '@/ts/entries';
+    import { ref, computed } from 'vue'
+    import { lists, remove_list } from '@/ts/lists';
+    import { remove_entry } from '@/ts/entries';
     import { showSidebar } from '@/ts/sidebar';
+    import type { Entry } from '@/ts/entries';
 
     const expandedListId = ref<number | null>(null)
 
@@ -10,8 +11,20 @@
         expandedListId.value = expandedListId.value === id ? null : id
     }
 
-    function entries_for_list(listId: number) {
-        return entries.value.filter(e => e.list_id === listId)
+    const sorted_lists = computed(() =>
+        [...lists.value].sort((a, b) => a.name.localeCompare(b.name))
+    )
+
+    function sort_entries(es: Entry[]) {
+        return [...es].sort((a, b) => {
+            if (a.date !== b.date) return a.date < b.date ? -1 : 1
+            const a_has_time = !!a.time_start
+            const b_has_time = !!b.time_start
+            if (a_has_time !== b_has_time) return a_has_time ? -1 : 1
+            if (a_has_time && b_has_time && a.time_start !== b.time_start)
+                return a.time_start < b.time_start ? -1 : 1
+            return a.name.localeCompare(b.name)
+        })
     }
 </script>
 
@@ -19,15 +32,23 @@
     <button class="calendar-button" @click="showSidebar = false">≡</button>
 
     <component-body>
-        <template v-for="list in lists" :key="list.id">
+        <template v-for="list in sorted_lists" :key="list.id">
             <list-item @click="toggle_list(list.id)">
                 <list-color :class="list.color + '-filled'"></list-color>
                 <list-title>{{ list.name }}</list-title>
                 <list-count>{{ list.count }}</list-count>
+                <div class="list-buttons" v-if="list.id !== 0">
+                    <button class="calendar-button" id="edit-button" @click.stop="showSidebar = false; $router.push(`/editlist/${list.id}`)">Edit</button>
+                    <button class="calendar-button" id="delete-button" @click.stop="remove_list(list)">Delete</button>
+                </div>
             </list-item>
-            <entry-row v-if="expandedListId === list.id" v-for="entry in entries_for_list(list.id)" :key="entry.id">
+            <entry-row v-if="expandedListId === list.id" v-for="entry in sort_entries(list.entries)" :key="entry.id">
                 <entry-name>{{ entry.name }}</entry-name>
-                <entry-date>{{ +entry.date.split('-')[1] + '/' + +entry.date.split('-')[2] + '/' + entry.date.split('-')[0].slice(2) }}</entry-date>
+                <entry-date>{{ entry.date.split('-')[1] + '/' + entry.date.split('-')[2] + '/' + entry.date.split('-')[0]?.slice(2) }}</entry-date>
+                <div class="entry-buttons">
+                    <button class="calendar-button" id="edit-button" @click="showSidebar = false; $router.push(`/editentry/${entry.id}`)">Edit</button>
+                    <button class="calendar-button" id="delete-button" @click="remove_entry(entry)">Delete</button>
+                </div>
             </entry-row>
         </template>
     </component-body>
@@ -41,11 +62,6 @@
         box-sizing: border-box;
     }
 
-    body {
-        background: #f5f7fa;
-        margin: 0;
-    }
-
     component-body {
         display: grid;
         grid-auto-flow: row;
@@ -56,7 +72,9 @@
 
     list-item {
         display: grid;
-        grid-template: "color title count" / 32px 1fr auto;
+        grid-template:
+            "color title count"
+            "btns  btns  btns" / 32px 1fr auto;
         align-items: center;
         padding: 14px 20px;
         background: #fff;
@@ -65,13 +83,34 @@
         cursor: pointer;
     }
 
+    .list-buttons {
+        grid-area: btns;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        padding: 4px 0;
+    }
+
     entry-row {
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template:
+            "name date"
+            "btns btns" / 1fr auto;
         align-items: center;
         padding: 8px 20px 8px 32px;
         background: #f5f7fa;
         border-bottom: 1px solid #f0f2f5;
+    }
+
+    entry-name { grid-area: name; }
+    entry-date  { grid-area: date; }
+
+    .entry-buttons {
+        grid-area: btns;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        padding: 4px 0;
     }
 
     entry-name {
@@ -118,6 +157,11 @@
         font-weight: 600;
         cursor: pointer;
         transition: background 0.15s;
+    }
+
+    #edit-button, #delete-button {
+        margin: 0;
+        padding: 7px 14px;
     }
 
     .calendar-button:active {

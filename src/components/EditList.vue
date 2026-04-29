@@ -1,14 +1,20 @@
 <script setup lang="ts">
   import { ref } from 'vue'
-  import { create_list } from '@/ts/lists'
+  import { lists, update_list } from '@/ts/lists'
+  import { useRoute } from 'vue-router';
 
-  const list_name = ref('')
-  const list_color = ref('')
+  const route = useRoute()
+
+  const list_id = Number(route.params.id)
+  const list = lists.value.find(l => l.id === list_id)!
+
+  const list_name = ref(list.name)
+  const list_color = ref(list.color)
 </script>
 
 <template>
     <component-body>
-        <section-heading>Create New List</section-heading>
+        <section-heading>Edit List</section-heading>
 
         <selection-field>
             <selection-title>Name</selection-title>
@@ -49,7 +55,7 @@
         </selection-field>
 
         <selection-buttons>
-            <button class="create-button" @click="create_list({ name: list_name, color: list_color, count: 0, entries: []}); $router.push('/')">Create</button>
+            <button class="create-button" @click="update_list(list_id, list_name, list_color ); $router.push('/')">Update</button>
             <button class="discard-button" @click="$router.push('/')">Discard</button>
         </selection-buttons>
     </component-body>
@@ -115,14 +121,6 @@
     input[type="text"]:focus {
         border-color: #007aff;
         background: #fff;
-    }
-
-    error-message {
-        display: block;
-        color: #d00;
-        font-size: 13px;
-        text-align: center;
-        padding: 8px 20px 0;
     }
 
     selection-buttons {
