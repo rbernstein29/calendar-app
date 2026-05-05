@@ -73,6 +73,7 @@
         max-width: 430px;
         margin: 0 auto;
         background: #f5f7fa;
+        padding-top: env(safe-area-inset-top);
     }
 
     section-heading {

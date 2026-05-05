@@ -105,6 +105,7 @@
         margin: 0 auto;
         min-height: 100vh;
         background: #f5f7fa;
+        padding-top: env(safe-area-inset-top);
     }
 
     page-heading {

@@ -60,38 +60,40 @@
 </script>
 
 <template>
-    <page-heading>
-        <button class="calendar-button-sidebar" @click="showSidebar = true">≡</button>
-        <button class="calendar-button-today" @click="$router.push(`/dailyentries/${today_year}/${today_month_num}/${today_day}`)">Today</button>
-        <button class="calendar-button-home" @click="goto_today()">⌂</button>
-    </page-heading>
+    <component-body>
+        <page-heading>
+            <button class="calendar-button-sidebar" @click="showSidebar = true">≡</button>
+            <button class="calendar-button-today" @click="$router.push(`/dailyentries/${today_year}/${today_month_num}/${today_day}`)">Today</button>
+            <button class="calendar-button-home" @click="goto_today()">⌂</button>
+        </page-heading>
 
-    <calendar-header>
-        <month-year>{{ months[current_date.month] + " " + current_date.year }}</month-year>
-        <button class="calendar-button" id="prev-month" @click="change_prev_month">{{ prev_month }}</button>
-        <button class="calendar-button" id="next-month" @click="change_next_month">{{ next_month }}</button>
-    </calendar-header>
+        <calendar-header>
+            <month-year>{{ months[current_date.month] + " " + current_date.year }}</month-year>
+            <button class="calendar-button" id="prev-month" @click="change_prev_month">{{ prev_month }}</button>
+            <button class="calendar-button" id="next-month" @click="change_next_month">{{ next_month }}</button>
+        </calendar-header>
 
-    <table>
-        <thead>
-            <tr>
-                <th>S</th>
-                <th>M</th>
-                <th>T</th>
-                <th>W</th>
-                <th>T</th>
-                <th>F</th>
-                <th>S</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(week, wi) in weeks" :key="wi">
-                <td v-for="(day, di) in week" :key="di" :class="{ today: day === today_day && current_date.month === today_month_num && current_date.year === today_year }" @click="day && $router.push(`/dailyentries/${current_date.year}/${current_date.month}/${day}`)">{{ day ?? '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>S</th>
+                    <th>M</th>
+                    <th>T</th>
+                    <th>W</th>
+                    <th>T</th>
+                    <th>F</th>
+                    <th>S</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(week, wi) in weeks" :key="wi">
+                    <td v-for="(day, di) in week" :key="di" :class="{ today: day === today_day && current_date.month === today_month_num && current_date.year === today_year }" @click="day && $router.push(`/dailyentries/${current_date.year}/${current_date.month}/${day}`)">{{ day ?? '' }}</td>
+                </tr>
+            </tbody>
+        </table>
 
-    <button class="calendar-button" @click="$router.push('/newentry')">+</button>
+        <button class="calendar-button" @click="$router.push('/newentry')">+</button>
+    </component-body>
 </template>
 
 <style scoped>
@@ -110,6 +112,7 @@
         max-width: 430px;
         margin: 0 auto;
         width: 100%;
+        padding-top: env(safe-area-inset-top);
     }
 
     calendar-header {

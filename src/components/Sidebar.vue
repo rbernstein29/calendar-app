@@ -29,9 +29,9 @@
 </script>
 
 <template>
-    <button class="calendar-button" @click="showSidebar = false">≡</button>
-
     <component-body>
+        <button class="toggle-sidebar-button" @click="showSidebar = false">≡</button>
+
         <template v-for="list in sorted_lists" :key="list.id">
             <list-item @click="toggle_list(list.id)">
                 <list-color :class="list.color + '-filled'"></list-color>
@@ -68,6 +68,7 @@
         max-width: 430px;
         margin: 0 auto;
         width: 100%;
+        padding-top: env(safe-area-inset-top);
     }
 
     list-item {
@@ -159,12 +160,30 @@
         transition: background 0.15s;
     }
 
+    .toggle-sidebar-button {
+        margin: 16px 16px;
+        background: #007aff;
+        color: #fff;
+        border: none;
+        border-radius: 16px;
+        padding: 7px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+        width: 20%;
+    }
+
     #edit-button, #delete-button {
         margin: 0;
         padding: 7px 14px;
     }
 
     .calendar-button:active {
+        background: #0062cc;
+    }
+
+    .toggle-sidebar-button:active {
         background: #0062cc;
     }
 
